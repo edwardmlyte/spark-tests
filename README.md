@@ -28,7 +28,7 @@ Use cases
 Here are the steps to perform this:
   + Retrieve world cup matchs statistics from [worldcup.sfg.io](http://worldcup.sfg.io/) json API, using [retrofit](http://square.github.io/retrofit/)
   + Store retrieved statistics into an embedded [Cassandra](http://cassandra.apache.org/) server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
-  + Perform a "group By" winner country accross all matches, using [Stratio](http://www.openstratio.org/), allowing using [Cassandra](http://cassandra.apache.org/) Database as a spark resilient distributed dataset (RDD) for [Spark](http://spark.apache.org/).
+  + Perform a "group By" winner country accross all matches, using [Stratio](http://www.openstratio.org/), allowing using [Cassandra](http://cassandra.apache.org/) Database as a resilient distributed dataset (RDD) for [Spark](http://spark.apache.org/).
   + The following results will appear (on 29 June 2014):<br/><br/>
 GroupBy Results:<br/>
 (null,14)<br/>
