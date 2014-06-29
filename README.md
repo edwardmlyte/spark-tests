@@ -1,9 +1,7 @@
 spark-tests
 ===============
 
-Spark use cases
-====================
-This repo contains tests involving spark using a Cassandra Data source, through the ([Stratio API](http://www.openstratio.org/)).
+This repo contains tests involving spark using a Cassandra Data source, through the [Stratio API](http://www.openstratio.org/).
 
 Installation prerequisites
 -------
@@ -18,8 +16,6 @@ Download the project
 
 git clone https://github.com/jsebrien/spark-tests.git
 
--------
-
 Run tests
 -------
 
@@ -30,33 +26,33 @@ Use cases
 
 - Perform a "group By" winner country and display, for each team, how many times they win during World Cup (until now).
 Here are the steps to perform this:
-1. Retrieve world cup matchs using worldcup.sfg.io json API (using [retrofit](http://square.github.io/retrofit/))
-2. Store retrieved statistics into an embedded cassandra server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
-3. Perform a "group By" winner country accross all matches, using statio API (using [stratio](http://www.openstratio.org/)), allowing using Cassandra Database as a spark resilient distributed dataset (RDD).
-4. The following results will appear (on 29 June 2014):
-GroupBy Results:
-(null,14)
-(Portugal,1)
-(Brazil,3)
-(Netherlands,3)
-(Draw,9)
-(Uruguay,2)
-(Colombia,4)
-(Argentina,3)
-(Chile,2)
-(Croatia,1)
-(Belgium,3)
-(Mexico,2)
-(Ecuador,1)
-(Greece,1)
-(France,2)
-(Italy,1)
-(Ivory Coast,1)
-(Algeria,1)
-(Switzerland,2)
-(Spain,1)
-(Germany,2)
-(USA,1)
-(Costa Rica,2)
-(Bosnia and Herzegovina,1)
-(Nigeria,1)
+  + Retrieve world cup matchs using worldcup.sfg.io json API (using [retrofit](http://square.github.io/retrofit/))
+  + Store retrieved statistics into an embedded cassandra server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
+  + Perform a "group By" winner country accross all matches, using statio API (using [stratio](http://www.openstratio.org/)), allowing using Cassandra Database as a spark resilient distributed dataset (RDD).
+  + The following results will appear (on 29 June 2014):<br/><br/>
+GroupBy Results:<br/>
+(null,14)<br/>
+(Portugal,1)<br/>
+(Brazil,3)<br/>
+(Netherlands,3)<br/>
+(Draw,9)<br/>
+(Uruguay,2)<br/>
+(Colombia,4)<br/>
+(Argentina,3)<br/>
+(Chile,2)<br/>
+(Croatia,1)<br/>
+(Belgium,3)<br/>
+(Mexico,2)<br/>
+(Ecuador,1)<br/>
+(Greece,1)<br/>
+(France,2)<br/>
+(Italy,1)<br/>
+(Ivory Coast,1)<br/>
+(Algeria,1)<br/>
+(Switzerland,2)<br/>
+(Spain,1)<br/>
+(Germany,2)<br/>
+(USA,1)<br/>
+(Costa Rica,2)<br/>
+(Bosnia and Herzegovina,1)<br/>
+(Nigeria,1)<br/>
