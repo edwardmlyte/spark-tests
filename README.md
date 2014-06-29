@@ -1,7 +1,7 @@
 spark-tests
 ===============
 
-This repo contains tests involving spark using a Cassandra Data source, through the [Stratio API](http://www.openstratio.org/).
+This repo contains tests involving [Spark](http://spark.apache.org/) using a [Cassandra](http://cassandra.apache.org/) Data source, through the [Stratio API](http://www.openstratio.org/).
 
 Installation prerequisites
 -------
@@ -26,9 +26,9 @@ Use cases
 
 - Perform a "group By" winner country and display, for each team, how many times they win during World Cup (until now).
 Here are the steps to perform this:
-  + Retrieve world cup matchs using worldcup.sfg.io json API (using [retrofit](http://square.github.io/retrofit/))
-  + Store retrieved statistics into an embedded cassandra server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
-  + Perform a "group By" winner country accross all matches, using statio API (using [stratio](http://www.openstratio.org/)), allowing using Cassandra Database as a spark resilient distributed dataset (RDD).
+  + Retrieve world cup matchs statistics from [worldcup.sfg.io](http://worldcup.sfg.io/) json API, using [retrofit](http://square.github.io/retrofit/)
+  + Store retrieved statistics into an embedded [Cassandra](http://cassandra.apache.org/) server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
+  + Perform a "group By" winner country accross all matches, using [Stratio](http://www.openstratio.org/), allowing using [Cassandra](http://cassandra.apache.org/) Database as a spark resilient distributed dataset (RDD) for [Spark](http://spark.apache.org/).
   + The following results will appear (on 29 June 2014):<br/><br/>
 GroupBy Results:<br/>
 (null,14)<br/>
