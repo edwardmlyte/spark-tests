@@ -3,7 +3,7 @@ spark-tests
 
 Spark use cases
 ====================
-This repo contains tests involving spark using a Cassandra Data source, through the Stratio API (openstratio.org).
+This repo contains tests involving spark using a Cassandra Data source, through the ([Stratio API](http://www.openstratio.org/)).
 
 Installation prerequisites
 -------
@@ -30,10 +30,10 @@ Use cases
 
 - Perform a "group By" winner country and display, for each team, how many times they win during World Cup (until now).
 Here are the steps to perform this:
-* Retrieve world cup matchs using worldcup.sfg.io json API (using retrofit)
-* Store retrieved statistics into an embedded cassandra server (using cassandra unit)
-* Perform a "group By" winner country accross all matches, using statio API (using stratio), allowing using Cassandra Database as a spark resilient distributed dataset (RDD).
-The following results will appear (on 29 June 2014):
+1. Retrieve world cup matchs using worldcup.sfg.io json API (using [retrofit](http://square.github.io/retrofit/))
+2. Store retrieved statistics into an embedded cassandra server (using [cassandra unit](https://github.com/jsevellec/cassandra-unit))
+3. Perform a "group By" winner country accross all matches, using statio API (using [stratio](http://www.openstratio.org/)), allowing using Cassandra Database as a spark resilient distributed dataset (RDD).
+4. The following results will appear (on 29 June 2014):
 GroupBy Results:
 (null,14)
 (Portugal,1)
