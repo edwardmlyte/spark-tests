@@ -6,9 +6,6 @@ import java.util.List;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
-import org.cassandraunit.CQLDataLoader;
-import org.cassandraunit.dataset.cql.ClassPathCQLDataSet;
-import org.cassandraunit.utils.EmbeddedCassandraServerHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +13,8 @@ import retrofit.RestAdapter;
 import scala.Tuple2;
 import blog.hashmade.spark.retrofit.WorldCupService;
 import blog.hashmade.spark.retrofit.bean.Match;
+import blog.hashmade.spark.util.MatchUtil;
 
-import com.datastax.driver.core.BatchStatement;
-import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.PreparedStatement;
-import com.datastax.driver.core.Session;
-import com.datastax.driver.core.querybuilder.Insert;
-import com.datastax.driver.core.querybuilder.QueryBuilder;
 import com.google.common.collect.Lists;
 import com.stratio.deep.config.DeepJobConfigFactory;
 import com.stratio.deep.config.ICassandraDeepJobConfig;
@@ -30,14 +22,13 @@ import com.stratio.deep.context.DeepSparkContext;
 import com.stratio.deep.entity.Cells;
 import com.stratio.deep.rdd.CassandraJavaRDD;
 
-public class StandaloneGroupByTest {
+public class StratioGroupByTest {
 
-	private static final int EMBEDDED_CASSANDRA_SERVER_WAITING_TIME = 10000;
-	private static final Logger LOGGER = LoggerFactory.getLogger(StandaloneGroupByTest.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(StratioGroupByTest.class);
 	
 	public static void main(String[] args) throws IOException {
 		try {
-			initCassandra(retrieveMatchs());
+			MatchUtil.initCassandraWithMatchs(retrieveMatchs());
 			initSpark();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage(), e);
@@ -52,48 +43,6 @@ public class StandaloneGroupByTest {
 		return service.getMatchs();
 	}
 
-	private static void initCassandra(List<Match> matchs) throws Exception {
-		EmbeddedCassandraServerHelper.startEmbeddedCassandra();
-		Thread.sleep(EMBEDDED_CASSANDRA_SERVER_WAITING_TIME);
-		Cluster cluster = new Cluster.Builder().addContactPoints("localhost")
-				.withPort(9142).build();
-		Session session = cluster.connect();
-		CQLDataLoader dataLoader = new CQLDataLoader(session);
-		dataLoader.load(new ClassPathCQLDataSet("worldcup.cql"));
-		
-		Insert insertStatement = QueryBuilder.insertInto("Match");
-		insertStatement.value("number", QueryBuilder.bindMarker())
-		 .value("status", QueryBuilder.bindMarker())
-		 .value("location", QueryBuilder.bindMarker())
-		 .value("datetime", QueryBuilder.bindMarker())
-		 .value("winner", QueryBuilder.bindMarker())
-		 .value("home_team_code", QueryBuilder.bindMarker())
-		 .value("home_team_country", QueryBuilder.bindMarker())
-		 .value("home_team_goals", QueryBuilder.bindMarker())
-		 .value("away_team_code", QueryBuilder.bindMarker())
-		 .value("away_team_country", QueryBuilder.bindMarker())
-		 .value("away_team_goals", QueryBuilder.bindMarker());
-		PreparedStatement ps = session.prepare(insertStatement.toString());
-		BatchStatement batch = new BatchStatement();
-		for(Match match : matchs){
-			batch.add(ps.bind(match.getMatch_number(), 
-					match.getStatus(), 
-					match.getLocation(), 
-					match.getDatetime(),
-					match.getWinner(),
-					match.getHome_team().getCode(),
-					match.getHome_team().getCountry(),
-					match.getHome_team().getGoals(),
-					match.getAway_team().getCode(),
-					match.getAway_team().getCountry(),
-					match.getAway_team().getGoals()
-			));
-		}
-		session.execute(batch);
-		session.close();
-		
-	}
-
 	private static void initSpark() {
 		String cluster = "local";
 		String job = "myJobName";
@@ -105,6 +54,7 @@ public class StandaloneGroupByTest {
 				.create().host("localhost").cqlPort(9142)
 				.keyspace("worldCup").table("match")
 				.inputColumns("winner")
+				//.filterByField(filterColumnName, filterValue)
 				.initialize();
 		CassandraJavaRDD rdd = deepContext.cassandraJavaRDD(config);
 		
