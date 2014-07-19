@@ -19,6 +19,10 @@ git clone https://github.com/jsebrien/spark-tests.git
 Datastax - Run tests
 -------
 
+First you need to import spark-cassandra-connector_2.10-1.0.0-beta1.jar in your maven repository:
+mvn install:install-file -Dfile=lib/spark-cassandra-connector_2.10-1.0.0-beta1.jar -DgroupId=com.datastax -DartifactId=spark-cassandra-connector_2.10 -Dversion=1.0.0-beta1 -Dpackaging=jar
+
+Then start the test:
 mvn  clean package exec:java
 
 Datastax - Use cases
