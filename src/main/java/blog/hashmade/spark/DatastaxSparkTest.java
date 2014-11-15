@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
-import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
@@ -15,9 +14,10 @@ import org.slf4j.LoggerFactory;
 
 import scala.Tuple2;
 
-import com.datastax.driver.spark.CassandraJavaUtil;
-import com.datastax.driver.spark.CassandraJavaUtil.SparkContextJavaFunctions;
-import com.datastax.spark.connector.CassandraRow;
+import com.datastax.spark.connector.japi.CassandraJavaUtil;
+import com.datastax.spark.connector.japi.CassandraRow;
+import com.datastax.spark.connector.japi.SparkContextJavaFunctions;
+import com.datastax.spark.connector.japi.rdd.CassandraJavaRDD;
 import com.google.common.collect.Lists;
 
 public class DatastaxSparkTest {
@@ -47,8 +47,7 @@ public class DatastaxSparkTest {
 				.set("spark.cassandra.connection.rpc.port", "9171");
 		SparkContext ctx = new SparkContext(conf);
 		SparkContextJavaFunctions functions = CassandraJavaUtil.javaFunctions(ctx);
-		
-		JavaRDD<CassandraRow> rdd = functions.cassandraTable("roadtrips", "roadtrip").toJavaRDD();
+		CassandraJavaRDD<CassandraRow> rdd = functions.cassandraTable("roadtrips", "roadtrip");
 		rdd.cache();
 				
 		JavaPairRDD<String, Integer> sizes = rdd.groupBy( new Function<CassandraRow, String>() {

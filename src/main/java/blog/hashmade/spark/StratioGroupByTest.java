@@ -3,7 +3,10 @@ package blog.hashmade.spark;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.spark.SparkConf;
+import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.function.Function;
 import org.apache.spark.api.java.function.PairFunction;
 import org.slf4j.Logger;
@@ -16,11 +19,10 @@ import blog.hashmade.spark.retrofit.bean.Match;
 import blog.hashmade.spark.util.MatchUtil;
 
 import com.google.common.collect.Lists;
-import com.stratio.deep.config.DeepJobConfigFactory;
-import com.stratio.deep.config.ICassandraDeepJobConfig;
-import com.stratio.deep.context.DeepSparkContext;
-import com.stratio.deep.entity.Cells;
-import com.stratio.deep.rdd.CassandraJavaRDD;
+import com.stratio.deep.cassandra.config.CassandraConfigFactory;
+import com.stratio.deep.cassandra.config.CassandraDeepJobConfig;
+import com.stratio.deep.commons.entity.Cells;
+import com.stratio.deep.core.context.DeepSparkContext;
 
 public class StratioGroupByTest {
 
@@ -46,17 +48,23 @@ public class StratioGroupByTest {
 	private static void initSpark() {
 		String cluster = "local";
 		String job = "myJobName";
-		String sparkHome = "";
+		SparkConf conf = new SparkConf(true)
+			.setMaster(cluster)
+	        .setAppName("DatastaxtTests")
+	        .set("spark.executor.memory", "1g")
+			.set("spark.cassandra.connection.host", "localhost")
+			.set("spark.cassandra.connection.native.port", "9142")
+			.set("spark.cassandra.connection.rpc.port", "9171");
 
-		DeepSparkContext deepContext = new DeepSparkContext(cluster, job,
-				sparkHome, new String[]{});
-		ICassandraDeepJobConfig<Cells> config = DeepJobConfigFactory
-				.create().host("localhost").cqlPort(9142)
-				.keyspace("worldCup").table("match")
-				.inputColumns("winner")
-				//.filterByField(filterColumnName, filterValue)
-				.initialize();
-		CassandraJavaRDD rdd = deepContext.cassandraJavaRDD(config);
+		SparkContext sparkContext = new SparkContext(cluster, job, conf);
+		DeepSparkContext deepSparkContext = new DeepSparkContext(sparkContext);
+		CassandraDeepJobConfig<Cells> config = CassandraConfigFactory.create()
+			.host("localhost")
+			.cqlPort(9142)
+			.keyspace("worldcup")
+			.table("match");
+		config.initialize();
+		JavaRDD<Cells> rdd = (JavaRDD<Cells>) deepSparkContext.createJavaRDD(config);
 		
 		JavaPairRDD<String, Iterable<Cells>> groups = rdd.groupBy(new Function<Cells, String>() {
 		    @Override
